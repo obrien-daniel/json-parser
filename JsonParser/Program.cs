@@ -19,10 +19,12 @@ namespace JSONParser
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 1) // If using VS 2015, set this in Project->Properties->Debug->Command-line arguments
             {
                 Console.WriteLine("Invalid argument length.");
                 Console.WriteLine("Usage: JsonParse.exe [json file]");
+                Console.Write("Press any key to exit...");
+                Console.ReadKey();
                 return;
             }
             else
