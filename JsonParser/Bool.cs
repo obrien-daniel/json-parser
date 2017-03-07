@@ -15,7 +15,7 @@ namespace JSONParser
             //string TAB_INDENT = "";
             //for (int i = 0; i < indent; i++)
             //    TAB_INDENT += "\t";
-            return Value.ToString();
+            return Value.ToString().ToLower();
         }
         public override int GetWeight()
         {
