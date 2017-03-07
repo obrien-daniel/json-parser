@@ -33,48 +33,53 @@ namespace JSONParser
                 BaseObject root;
                 string line = File.ReadAllText(args[0]); //currently just grabs whole text file, this needs to change for reading larger files, possibly using BufferedStream and streamreader.
                 root = Parse(line, ref index);
-                Console.WriteLine("Weight of tree (amount of values): " + root.GetWeight());
-                bool flag = false;
-                // Check if user wants to pretty print json
-                do
+                if (root == null)
+                    Console.WriteLine("Ill formed JSON.");
+                else
                 {
-                    Console.WriteLine("Would you like to pretty print this in the console? (y/n)");
-                    string answer = Console.ReadLine();
-                    if (answer.ToLower().Equals("y"))
+                    Console.WriteLine("Weight of tree (amount of values): " + root.GetWeight());
+                    bool flag = false;
+                    // Check if user wants to pretty print json
+                    do
                     {
-                        Console.WriteLine(root.Print(0));
-                        flag = true;
-                    }
-                    else if (answer.ToLower().Equals("n"))
+                        Console.WriteLine("Would you like to pretty print this in the console? (y/n)");
+                        string answer = Console.ReadLine();
+                        if (answer.ToLower().Equals("y"))
+                        {
+                            Console.WriteLine(root.Print(0));
+                            flag = true;
+                        }
+                        else if (answer.ToLower().Equals("n"))
+                        {
+                            flag = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input.");
+                        }
+                    } while (!flag);
+                    // Check if user wants to save to a local file
+                    flag = false;
+                    do
                     {
-                        flag = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input.");
-                    }
-                } while (!flag);
-                // Check if user wants to save to a local file
-                flag = false;
-                do
-                {
-                    Console.WriteLine("Would you like to save this to a local file? (y/n)");
-                    string answer = Console.ReadLine();
-                    if (answer.ToLower().Equals("y"))
-                    {
-                        File.WriteAllText("./pretty_json.json", root.Print(0));
-                        Console.WriteLine("./pretty_json.json saved sucessfully.");
-                        flag = true;
-                    }
-                    else if (answer.ToLower().Equals("n"))
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input.");
-                    }
-                } while (!flag);
+                        Console.WriteLine("Would you like to save this to a local file? (y/n)");
+                        string answer = Console.ReadLine();
+                        if (answer.ToLower().Equals("y"))
+                        {
+                            File.WriteAllText("./pretty_json.json", root.Print(0));
+                            Console.WriteLine("./pretty_json.json saved sucessfully.");
+                            flag = true;
+                        }
+                        else if (answer.ToLower().Equals("n"))
+                        {
+                            flag = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input.");
+                        }
+                    } while (!flag);
+                }
                 // Wait for input to exit
                 Console.Write("Press any key to exit...");
                 Console.ReadKey();
@@ -112,8 +117,7 @@ namespace JSONParser
                 return ParseNumber(value, ref index);
             else if (currentValue == '"')
                 return ParseString(value, ref index);
-            // index++;
-            //   }
+            else
             return null;
         }
         /// <summary>
@@ -387,6 +391,8 @@ namespace JSONParser
                 index++; // skip :
                 SkipWhitespace(value, ref index);
                 BaseObject bobj = Parse(value, ref index); // parse value
+                if (bobj == null)
+                    return null;
                 obj.Value.Add(name, bobj);
             }
             index++; //skip }
@@ -408,6 +414,8 @@ namespace JSONParser
             {
                 SkipWhitespace(value, ref index);
                 BaseObject obj = Parse(value, ref index);
+                if (obj == null)
+                    return null;
                 array.List.Add(obj);
                 SkipWhitespace(value, ref index);
                 if (value[index] == ',')
