@@ -3,7 +3,7 @@
 /// </summary>
 namespace JSONParser
 {
-    class NULL : BaseObject
+    internal class NULL : BaseObject
     {
         public override string Print(int indent)
         {
