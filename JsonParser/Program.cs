@@ -65,7 +65,7 @@ namespace JSONParser
                     flag = false;
                     do
                     {
-                        Console.WriteLine("Would you like to save this to a local file? (y/n)");
+                        Console.WriteLine("Would you like to save the pretty printed JSON to a local file? (y/n)");
                         string answer = Console.ReadLine();
                         if (answer.ToLower().Equals("y"))
                         {
