@@ -3,7 +3,7 @@
 /// </summary>
 namespace JSONParser
 {
-    class Bool : BaseObject
+    internal class Bool : BaseObject
     {
         public Bool(bool value) // Constructor
         {

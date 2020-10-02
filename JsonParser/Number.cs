@@ -4,7 +4,7 @@
 
 namespace JSONParser
 {
-    class Number : BaseObject
+    internal class Number : BaseObject
     {
         public Number(double value) // Constructor
         {

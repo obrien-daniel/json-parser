@@ -4,7 +4,7 @@
 
 namespace JSONParser
 {
-    abstract class BaseObject
+    internal abstract class BaseObject
     {
         public abstract string Print(int indent);
         public abstract int GetWeight();
