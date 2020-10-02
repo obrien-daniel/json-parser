@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.IO;
+using System.Text;
 /// <summary>
 /// This Program parses JSON into a tree of values using inheritance. The amount of values in the document are printed to the console, and
 /// the user can view a printy print of the json file by either console or file.
@@ -11,13 +11,13 @@ using System.IO;
 /// </summary>
 namespace JSONParser
 {
-    class Program
+    internal class Program
     {
         /// <summary>
         /// Parses json file. The user can view the amount of values in the JSON file and pretty print it.
         /// </summary>
         /// <param name="args"></param>
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 1) // If using VS 2015, set this in Project->Properties->Debug->Command-line arguments
             {
@@ -34,9 +34,12 @@ namespace JSONParser
                 string line = File.ReadAllText(args[0]); //currently just grabs whole text file, this needs to change for reading larger files, possibly using BufferedStream and streamreader.
                 root = Parse(line, ref index);
                 if (root == null)
-                    Console.WriteLine("Ill formed JSON.");
+                {
+                    Console.WriteLine("The JSON supplied is ill-formed.");
+                }
                 else
                 {
+                    Console.WriteLine("The JSON supplied is well-formed.");
                     Console.WriteLine("Weight of tree (amount of values): " + root.GetWeight());
                     bool flag = false;
                     // Check if user wants to pretty print json
@@ -95,7 +98,6 @@ namespace JSONParser
         {
             //   while(index < value.Length) //while within string
             //  {
-            int length = value.Length;
             char currentValue = value[index];
             SkipWhitespace(value, ref index);
             if (currentValue == '\\')
@@ -103,22 +105,18 @@ namespace JSONParser
                 index++;
                 currentValue = value[index];
             }
-            if (currentValue == 't')
-                return ParseTrue(value, ref index);
-            else if (currentValue == 'f')
-                return ParseFalse(value, ref index);
-            else if (currentValue == 'n')
-                return ParseNULL(value, ref index);
-            else if (currentValue == '{')
-                return ParseObject(value, ref index);
-            else if (currentValue == '[')
-                return ParseArray(value, ref index);
-            else if (IsNumerical(currentValue))
-                return ParseNumber(value, ref index);
-            else if (currentValue == '"')
-                return ParseString(value, ref index);
-            else
-            return null;
+
+            return currentValue switch
+            {
+                't' => ParseTrue(ref index),
+                'f' => ParseFalse(ref index),
+                'n' => ParseNULL(ref index),
+                '{' => ParseObject(value, ref index),
+                '[' => ParseArray(value, ref index),
+                '"' => ParseString(value, ref index),
+                var _ when IsNumerical(currentValue) => ParseNumber(value, ref index),
+                _ => null,
+            };
         }
         /// <summary>
         /// Determines if character is considered a numerical character for JSON. This is 
@@ -128,10 +126,7 @@ namespace JSONParser
         /// <returns></returns>
         public static bool IsNumerical(char c)
         {
-            if ("0123456789-".IndexOf(c) != -1)
-                return true;
-            else
-                return false;
+            return "0123456789-".IndexOf(c) != -1;
         }
 
         /// <summary>
@@ -143,8 +138,12 @@ namespace JSONParser
         public static void SkipWhitespace(string value, ref int index)
         {
             for (; index < value.Length; index++)
+            {
                 if (" \t\n\r".IndexOf(value[index]) == -1)
+                {
                     break;
+                }
+            }
         }
         /// <summary>
         /// Parse a number into a Number data structure.
@@ -157,14 +156,15 @@ namespace JSONParser
             SkipWhitespace(value, ref index);
             int end = GetLastIndexOfNumber(value, index);
             int length = end - index;
-            double number;
-            if (Double.TryParse(value.Substring(index, length), out number))
+            if (double.TryParse(value.Substring(index, length), out double number))
             {
                 index = end;
                 return new Number(number);
             }
             else
+            {
                 return null;
+            }
         }
         /// <summary>
         /// Get the index of the last number + 1
@@ -176,8 +176,13 @@ namespace JSONParser
         {
             int end;
             for (end = index; end < value.Length; end++)
+            {
                 if ("0123456789.+-eE".IndexOf(value[end]) == -1) // finds where the index isn't one part of "0123456789.+-eE"
+                {
                     break;
+                }
+            }
+
             return end;
         }
         /// <summary>
@@ -186,7 +191,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseTrue(string value, ref int index)
+        public static BaseObject ParseTrue(ref int index)
         {
             index += 4; // true is 4 characters
             return new Bool(true);
@@ -197,7 +202,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseFalse(string value, ref int index)
+        public static BaseObject ParseFalse(ref int index)
         {
             index += 5; // false is 5 characters
             return new Bool(false);
@@ -208,7 +213,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseNULL(string value, ref int index)
+        public static BaseObject ParseNULL(ref int index)
         {
             index += 4; // Skil rest of NULL characters
             return new NULL();
@@ -223,22 +228,21 @@ namespace JSONParser
         {
             StringBuilder str = new StringBuilder();
             SkipWhitespace(value, ref index);
-            char currentChar = value[index++]; // skip "
+            _ = value[index++]; // skip "
             bool complete = false;
             while (!complete)
             {
-                if (index == value.Length) // if at end
-                    break;
-                currentChar = value[index++];
+                if (index == value.Length) break;  // if at end
+
+                char currentChar = value[index++];
                 if (currentChar == '"')
                 {
-                    complete = true;
                     break;
                 }
                 else if (currentChar == '\\') // if at escape character
                 {
-                    if (index == value.Length)
-                        break;
+                    if (index == value.Length) break;
+
                     currentChar = value[index++];
                     if (currentChar == '"')
                     {
@@ -300,22 +304,21 @@ namespace JSONParser
             StringBuilder str = new StringBuilder();
 
             SkipWhitespace(value, ref index);
-            char currentChar = value[index++]; // "
+            _ = value[index++]; // "
             bool complete = false;
             while (!complete)
             {
-                if (index == value.Length) // if at end
-                    break;
-                currentChar = value[index++];
+                if (index == value.Length) break; // if at end
+
+                char currentChar = value[index++];
                 if (currentChar == '"')
                 {
-                    complete = true;
                     break;
                 }
                 else if (currentChar == '\\') // if at escape character
                 {
-                    if (index == value.Length)
-                        break;
+                    if (index == value.Length) break;
+
                     currentChar = value[index++];
                     if (currentChar == '"')
                     {
@@ -383,7 +386,9 @@ namespace JSONParser
             {
                 SkipWhitespace(value, ref index);
                 if (value[index] == ',')
+                {
                     index++;
+                }
 
                 SkipWhitespace(value, ref index);
                 string name = ParseObjectStringName(value, ref index);
