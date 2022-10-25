@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSONParser", "JsonParser\JSONParser.csproj", "{43DCB23F-446C-4259-A6A7-C71AA300C885}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSONParser", "JsonParser\JSONParser.csproj", "{43DCB23F-446C-4259-A6A7-C71AA300C885}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B34E6AF0-CFD4-48E6-9E64-58AD59BA40B8}"
 	ProjectSection(SolutionItems) = preProject
