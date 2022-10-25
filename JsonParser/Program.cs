@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+
 /// <summary>
 /// This Program parses JSON into a tree of values using inheritance. The amount of values in the document are printed to the console, and
 /// the user can view a printy print of the json file by either console or file.
-/// 
+///
 /// Object-Oriented Programming HW 2
 /// 3-7-17
 /// by Daniel O'Brien
@@ -88,6 +89,7 @@ namespace JSONParser
                 Console.ReadKey();
             }
         }
+
         /// <summary>
         /// Main parse method that determines which JSON value type to parse.
         /// </summary>
@@ -118,8 +120,9 @@ namespace JSONParser
                 _ => null,
             };
         }
+
         /// <summary>
-        /// Determines if character is considered a numerical character for JSON. This is 
+        /// Determines if character is considered a numerical character for JSON. This is
         /// only applied to the first character to determine if the program should parse a number.
         /// </summary>
         /// <param name="c"></param>
@@ -145,6 +148,7 @@ namespace JSONParser
                 }
             }
         }
+
         /// <summary>
         /// Parse a number into a Number data structure.
         /// </summary>
@@ -166,6 +170,7 @@ namespace JSONParser
                 return null;
             }
         }
+
         /// <summary>
         /// Get the index of the last number + 1
         /// </summary>
@@ -185,6 +190,7 @@ namespace JSONParser
 
             return end;
         }
+
         /// <summary>
         /// Parse boolean true into Bool data structure
         /// </summary>
@@ -196,6 +202,7 @@ namespace JSONParser
             index += 4; // true is 4 characters
             return new Bool(true);
         }
+
         /// <summary>
         /// Parse boolean false into Bool data structure
         /// </summary>
@@ -207,6 +214,7 @@ namespace JSONParser
             index += 5; // false is 5 characters
             return new Bool(false);
         }
+
         /// <summary>
         /// Parse NULL into the NULL data structure
         /// </summary>
@@ -218,6 +226,7 @@ namespace JSONParser
             index += 4; // Skil rest of NULL characters
             return new NULL();
         }
+
         /// <summary>
         /// Parse string into the String datastructure. Escape characters are preserved.
         /// </summary>
@@ -289,12 +298,12 @@ namespace JSONParser
                 {
                     str.Append(currentChar);
                 }
-
             }
             return new JSONParser.String(str.ToString());
         }
+
         /// <summary>
-        /// Parse strings into string. This is used for object key names. 
+        /// Parse strings into string. This is used for object key names.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
@@ -365,10 +374,10 @@ namespace JSONParser
                 {
                     str.Append(currentChar);
                 }
-
             }
             return str.ToString();
         }
+
         /// <summary>
         /// Parse object that begins with { and ends with }.
         /// </summary>
@@ -403,6 +412,7 @@ namespace JSONParser
             index++; //skip }
             return obj;
         }
+
         /// <summary>
         /// Parse JSON array into Array data structure
         /// </summary>

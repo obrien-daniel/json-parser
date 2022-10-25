@@ -12,6 +12,7 @@ namespace JSONParser
             //    TAB_INDENT += "\t";
             return "null";
         }
+
         public override int GetWeight()
         {
             return 1;

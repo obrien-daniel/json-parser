@@ -2,9 +2,9 @@
 using System.Linq;
 
 /// <summary>
-/// Object class to handle object JSON value. 
+/// Object class to handle object JSON value.
 /// </summary>
-/// 
+///
 namespace JSONParser
 {
     internal class Object : BaseObject
@@ -35,6 +35,7 @@ namespace JSONParser
             result += TAB_INDENT + "}";
             return result;
         }
+
         public override int GetWeight()
         {
             int count = 1;
