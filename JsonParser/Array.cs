@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 /// <summary>
 /// Array class used to handle JSON array values.
 /// </summary>
@@ -8,6 +9,7 @@ namespace JSONParser
     internal class Array : BaseObject
     {
         public List<BaseObject> List = new List<BaseObject>();
+
         public override string Print(int indent)
         {
             if (List.Count == 0)
@@ -31,6 +33,7 @@ namespace JSONParser
             result += TAB_INDENT + "]";
             return result;
         }
+
         public override int GetWeight()
         {
             int count = 1;

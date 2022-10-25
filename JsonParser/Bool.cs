@@ -9,7 +9,9 @@ namespace JSONParser
         {
             Value = value;
         }
+
         public bool Value { get; private set; } // Getter and Setter for value property
+
         public override string Print(int indent)
         {
             //string TAB_INDENT = "";
@@ -17,6 +19,7 @@ namespace JSONParser
             //    TAB_INDENT += "\t";
             return Value.ToString().ToLower();
         }
+
         public override int GetWeight()
         {
             return 1;

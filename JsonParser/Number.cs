@@ -10,11 +10,14 @@ namespace JSONParser
         {
             Value = value;
         }
+
         public double Value { get; private set; } // Getter and Setter for value property
+
         public override string Print(int indent)
         {
             return Value.ToString();
         }
+
         public override int GetWeight()
         {
             return 1;
