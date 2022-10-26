@@ -6,12 +6,12 @@ namespace JSONParser
 {
     internal class Number : BaseObject
     {
-        public Number(double value) // Constructor
+        public Number(double value)
         {
             Value = value;
         }
 
-        public double Value { get; private set; } // Getter and Setter for value property
+        public double Value { get; private set; }
 
         public override string Print(int indent)
         {

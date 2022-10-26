@@ -5,18 +5,15 @@ namespace JSONParser
 {
     internal class String : BaseObject
     {
-        public String(string value) // Constructor
+        public String(string value)
         {
             Value = value;
         }
 
-        public string Value { get; private set; } // Getter and Setter for value property
+        public string Value { get; private set; }
 
         public override string Print(int indent)
         {
-            //string TAB_INDENT = "";
-            //for (int i = 0; i < indent; i++)
-            //    TAB_INDENT += "\t";
             string value = Value.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"");
             return "\"" + value + "\"";
         }

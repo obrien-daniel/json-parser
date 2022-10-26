@@ -8,7 +8,7 @@ namespace JSONParser
 {
     internal class Array : BaseObject
     {
-        public List<BaseObject> List = new List<BaseObject>();
+        public List<BaseObject> List = new();
 
         public override string Print(int indent)
         {

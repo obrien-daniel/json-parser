@@ -9,7 +9,7 @@ namespace JSONParser
 {
     internal class Object : BaseObject
     {
-        public Dictionary<string, BaseObject> Value = new Dictionary<string, BaseObject>();
+        public Dictionary<string, BaseObject> Value = new();
 
         public override string Print(int indent)
         {
