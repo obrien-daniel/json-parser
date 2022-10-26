@@ -3,7 +3,7 @@
 /// </summary>
 namespace JSONParser
 {
-    internal class String : BaseObject
+    public class String : BaseObject
     {
         public String(string value)
         {

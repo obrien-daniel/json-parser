@@ -7,7 +7,7 @@ using System.Linq;
 ///
 namespace JSONParser
 {
-    internal class Object : BaseObject
+    public class Object : BaseObject
     {
         public Dictionary<string, BaseObject> Value = new();
 

@@ -1,105 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 
-/// <summary>
-/// This Program parses JSON into a tree of values using inheritance. The amount of values in the document are printed to the console, and
-/// the user can view a printy print of the json file by either console or file.
-///
-/// Object-Oriented Programming HW 2
-/// 3-7-17
-/// by Daniel O'Brien
-/// </summary>
 namespace JSONParser
 {
-    internal class Program
+    public static class Parser
     {
         /// <summary>
-        /// Parses json file. The user can view the amount of values in the JSON file and pretty print it.
-        /// </summary>
-        /// <param name="args"></param>
-        private static void Main(string[] args)
-        {
-            if (args.Length != 1)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Usage: JsonParse.exe [path-to-json-file]");
-                Console.WriteLine();
-                Console.WriteLine("path-to-json-file:");
-                Console.WriteLine("\tThe path to a .json file to validate.");
-                Console.WriteLine();
-                Console.Write("Press any key to exit...");
-                Console.ReadKey();
-                return;
-            }
-            else
-            {
-                int index = 0;
-                BaseObject root;
-                string line = File.ReadAllText(args[0]); // TODO: currently just grabs whole text file, this needs to change for reading larger files, possibly using BufferedStream and streamreader.
-                root = Parse(line, ref index);
-                if (root == null)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("The JSON supplied is ill-formed.");
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("The JSON supplied is well-formed.");
-                    Console.WriteLine();
-                    Console.WriteLine("Weight of tree (amount of values): " + root.GetWeight());
-                    bool flag = false;
-                    // Check if user wants to pretty print json
-                    do
-                    {
-                        Console.WriteLine("Would you like to pretty print this in the console? (y/n)");
-                        string answer = Console.ReadLine();
-                        if (answer.ToLower().Equals("y"))
-                        {
-                            Console.WriteLine(root.Print(0));
-                            flag = true;
-                        }
-                        else if (answer.ToLower().Equals("n"))
-                        {
-                            flag = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input.");
-                        }
-                    } while (!flag);
-                    // Check if user wants to save to a local file
-                    flag = false;
-                    do
-                    {
-                        Console.WriteLine("Would you like to save the pretty printed JSON to a local file? (y/n)");
-                        string answer = Console.ReadLine();
-                        if (answer.ToLower().Equals("y"))
-                        {
-                            File.WriteAllText("./pretty_json.json", root.Print(0));
-                            Console.WriteLine("./pretty_json.json saved sucessfully.");
-                            flag = true;
-                        }
-                        else if (answer.ToLower().Equals("n"))
-                        {
-                            flag = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input.");
-                        }
-                    } while (!flag);
-                }
-                // Wait for input to exit
-                Console.Write("Press any key to exit...");
-                Console.ReadKey();
-            }
-        }
-
-        /// <summary>
-        /// Main parse method that determines which JSON value type to parse.
+        /// Main parse method that recursively parses a string into a JSON object
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
@@ -118,7 +25,7 @@ namespace JSONParser
             {
                 't' => ParseTrue(ref index),
                 'f' => ParseFalse(ref index),
-                'n' => ParseNULL(ref index),
+                'n' => ParseNull(ref index),
                 '{' => ParseObject(value, ref index),
                 '[' => ParseArray(value, ref index),
                 '"' => ParseString(value, ref index),
@@ -133,7 +40,7 @@ namespace JSONParser
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static bool IsNumerical(char c)
+        private static bool IsNumerical(char c)
         {
             return "0123456789-".IndexOf(c) != -1;
         }
@@ -143,7 +50,7 @@ namespace JSONParser
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
-        public static void SkipWhitespace(string value, ref int index)
+        private static void SkipWhitespace(string value, ref int index)
         {
             for (; index < value.Length; index++)
             {
@@ -152,15 +59,15 @@ namespace JSONParser
         }
 
         /// <summary>
-        /// Parse a number into a Number data structure.
+        /// Parse a number into a Number object.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseNumber(string value, ref int index)
+        private static BaseObject ParseNumber(string value, ref int index)
         {
             SkipWhitespace(value, ref index);
-            int end = GetLastIndexOfNumber(value, index);
+            int end = GetNextNonNumberIndex(value, index);
             int length = end - index;
             if (double.TryParse(value.AsSpan(index, length), out double number))
             {
@@ -174,12 +81,12 @@ namespace JSONParser
         }
 
         /// <summary>
-        /// Get the index of the last number + 1
+        /// Get the index of the next character that's not a number.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        protected static int GetLastIndexOfNumber(string value, int index)
+        private static int GetNextNonNumberIndex(string value, int index)
         {
             int end;
             for (end = index; end < value.Length; end++)
@@ -194,48 +101,48 @@ namespace JSONParser
         }
 
         /// <summary>
-        /// Parse boolean true into Bool data structure
+        /// Parse boolean true into Bool object
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseTrue(ref int index)
+        private static BaseObject ParseTrue(ref int index)
         {
             index += 4; // true is 4 characters
             return new Bool(true);
         }
 
         /// <summary>
-        /// Parse boolean false into Bool data structure
+        /// Parse boolean false into Bool object
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseFalse(ref int index)
+        private static BaseObject ParseFalse(ref int index)
         {
             index += 5; // false is 5 characters
             return new Bool(false);
         }
 
         /// <summary>
-        /// Parse NULL into the NULL data structure
+        /// Parse NULL into the NULL object
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseNULL(ref int index)
+        private static BaseObject ParseNull(ref int index)
         {
             index += 4; // Skil rest of NULL characters
-            return new NULL();
+            return new Null();
         }
 
         /// <summary>
-        /// Parse string into the String datastructure. Escape characters are preserved.
+        /// Parse string into the String object. Escape characters are preserved.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseString(string value, ref int index)
+        private static BaseObject ParseString(string value, ref int index)
         {
             var str = new StringBuilder();
             SkipWhitespace(value, ref index);
@@ -310,7 +217,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static string ParseObjectStringName(string value, ref int index)
+        private static string ParseObjectStringName(string value, ref int index)
         {
             StringBuilder str = new();
 
@@ -386,7 +293,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseObject(string value, ref int index)
+        private static BaseObject ParseObject(string value, ref int index)
         {
             SkipWhitespace(value, ref index);
             index++; // skip {
@@ -417,12 +324,12 @@ namespace JSONParser
         }
 
         /// <summary>
-        /// Parse JSON array into Array data structure
+        /// Parse JSON array into Array object
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject ParseArray(string value, ref int index)
+        private static BaseObject ParseArray(string value, ref int index)
         {
             SkipWhitespace(value, ref index);
             index++; // skip [

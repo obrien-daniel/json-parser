@@ -6,7 +6,7 @@ using System.Linq;
 /// </summary>
 namespace JSONParser
 {
-    internal class Array : BaseObject
+    public class Array : BaseObject
     {
         public List<BaseObject> List = new();
 
