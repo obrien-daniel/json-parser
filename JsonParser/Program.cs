@@ -393,7 +393,6 @@ namespace JSONParser
             //char previousChar = '\0';
             while (value[index] != '}')  // && previousChar != '\\')
             {
-                SkipWhitespace(value, ref index);
                 if (value[index] == ',')
                 {
                     index++;
@@ -408,6 +407,8 @@ namespace JSONParser
                 if (bobj == null)
                     return null;
                 obj.Value.Add(name, bobj);
+
+                SkipWhitespace(value, ref index);
             }
             index++; //skip }
             return obj;
