@@ -7,9 +7,6 @@ namespace JSONParser
     {
         public override string Print(int indent)
         {
-            //string TAB_INDENT = "";
-            //for (int i = 0; i < indent; i++)
-            //    TAB_INDENT += "\t";
             return "null";
         }
 

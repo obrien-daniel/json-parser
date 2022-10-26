@@ -20,10 +20,14 @@ namespace JSONParser
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
-            if (args.Length != 1) // If using VS 2015, set this in Project->Properties->Debug->Command-line arguments
+            if (args.Length != 1)
             {
-                Console.WriteLine("Invalid argument length.");
-                Console.WriteLine("Usage: JsonParse.exe [json file]");
+                Console.WriteLine();
+                Console.WriteLine("Usage: JsonParse.exe [path-to-json-file]");
+                Console.WriteLine();
+                Console.WriteLine("path-to-json-file:");
+                Console.WriteLine("\tThe path to a .json file to validate.");
+                Console.WriteLine();
                 Console.Write("Press any key to exit...");
                 Console.ReadKey();
                 return;
@@ -32,15 +36,19 @@ namespace JSONParser
             {
                 int index = 0;
                 BaseObject root;
-                string line = File.ReadAllText(args[0]); //currently just grabs whole text file, this needs to change for reading larger files, possibly using BufferedStream and streamreader.
+                string line = File.ReadAllText(args[0]); // TODO: currently just grabs whole text file, this needs to change for reading larger files, possibly using BufferedStream and streamreader.
                 root = Parse(line, ref index);
                 if (root == null)
                 {
+                    Console.WriteLine();
                     Console.WriteLine("The JSON supplied is ill-formed.");
+                    Console.WriteLine();
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("The JSON supplied is well-formed.");
+                    Console.WriteLine();
                     Console.WriteLine("Weight of tree (amount of values): " + root.GetWeight());
                     bool flag = false;
                     // Check if user wants to pretty print json
@@ -98,12 +106,10 @@ namespace JSONParser
         /// <returns></returns>
         public static BaseObject Parse(string value, ref int index)
         {
-            //   while(index < value.Length) //while within string
-            //  {
             char currentValue = value[index];
             SkipWhitespace(value, ref index);
-            if (currentValue == '\\')
-            { //escape character
+            if (currentValue == '\\') //escape character
+            {
                 index++;
                 currentValue = value[index];
             }
@@ -133,8 +139,7 @@ namespace JSONParser
         }
 
         /// <summary>
-        /// Checks if value[index] is contained within " \t\n\r", which means it's whitespace. If not, it returns
-        /// a -1 and breaks out of the loop.
+        /// Skips characters that are whitespace. When a non-whitespace character is found, the loop is broken, so the index is at the non-whitespace character.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
@@ -142,10 +147,7 @@ namespace JSONParser
         {
             for (; index < value.Length; index++)
             {
-                if (" \t\n\r".IndexOf(value[index]) == -1)
-                {
-                    break;
-                }
+                if (!" \t\n\r\b\f\v".Contains(value[index])) break;
             }
         }
 
@@ -160,7 +162,7 @@ namespace JSONParser
             SkipWhitespace(value, ref index);
             int end = GetLastIndexOfNumber(value, index);
             int length = end - index;
-            if (double.TryParse(value.Substring(index, length), out double number))
+            if (double.TryParse(value.AsSpan(index, length), out double number))
             {
                 index = end;
                 return new Number(number);
@@ -182,7 +184,7 @@ namespace JSONParser
             int end;
             for (end = index; end < value.Length; end++)
             {
-                if ("0123456789.+-eE".IndexOf(value[end]) == -1) // finds where the index isn't one part of "0123456789.+-eE"
+                if (!"0123456789.+-eE".Contains(value[end]))
                 {
                     break;
                 }
@@ -235,7 +237,7 @@ namespace JSONParser
         /// <returns></returns>
         public static BaseObject ParseString(string value, ref int index)
         {
-            StringBuilder str = new StringBuilder();
+            var str = new StringBuilder();
             SkipWhitespace(value, ref index);
             _ = value[index++]; // skip "
             bool complete = false;
@@ -299,7 +301,7 @@ namespace JSONParser
                     str.Append(currentChar);
                 }
             }
-            return new JSONParser.String(str.ToString());
+            return new String(str.ToString());
         }
 
         /// <summary>
@@ -310,7 +312,7 @@ namespace JSONParser
         /// <returns></returns>
         public static string ParseObjectStringName(string value, ref int index)
         {
-            StringBuilder str = new StringBuilder();
+            StringBuilder str = new();
 
             SkipWhitespace(value, ref index);
             _ = value[index++]; // "
@@ -389,9 +391,9 @@ namespace JSONParser
             SkipWhitespace(value, ref index);
             index++; // skip {
             SkipWhitespace(value, ref index);
-            Object obj = new JSONParser.Object(); // new object
+            var obj = new Object(); // new object
             //char previousChar = '\0';
-            while (value[index] != '}')  // && previousChar != '\\')
+            while (value[index] != '}')
             {
                 if (value[index] == ',')
                 {
@@ -425,7 +427,7 @@ namespace JSONParser
             SkipWhitespace(value, ref index);
             index++; // skip [
             SkipWhitespace(value, ref index);
-            Array array = new JSONParser.Array();
+            var array = new Array();
             while (value[index] != ']')
             {
                 SkipWhitespace(value, ref index);
