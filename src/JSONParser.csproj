@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="JsonObjects\**" />
+    <EmbeddedResource Remove="JsonObjects\**" />
+    <None Remove="JsonObjects\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="JsonObjects\Array.cs" />
+    <Compile Include="JsonObjects\BaseObject.cs" />
+    <Compile Include="JsonObjects\Bool.cs" />
+    <Compile Include="JsonObjects\Null.cs" />
+    <Compile Include="JsonObjects\Number.cs" />
+    <Compile Include="JsonObjects\Object.cs" />
+    <Compile Include="JsonObjects\String.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="testjson.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

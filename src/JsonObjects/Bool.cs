@@ -1,21 +1,20 @@
 ﻿/// <summary>
-/// Number class used as a data structure to handle a number that is not formatted.
+/// Bool class used to handle TRUE and FALSE JSON values.
 /// </summary>
-
 namespace JSONParser
 {
-    internal class Number : BaseObject
+    public class Bool : BaseObject
     {
-        public Number(double value)
+        public Bool(bool value)
         {
             Value = value;
         }
 
-        public double Value { get; private set; }
+        public bool Value { get; private set; }
 
         public override string Print(int indent)
         {
-            return Value.ToString();
+            return Value.ToString().ToLower();
         }
 
         public override int GetWeight()
