@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "JSONParser": {
+    "JsonParser": {
       "commandName": "Project",
       "commandLineArgs": "testjson.json"
     }

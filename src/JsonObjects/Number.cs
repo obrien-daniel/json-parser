@@ -2,7 +2,7 @@
 /// Number class used as a data structure to handle a number that is not formatted.
 /// </summary>
 
-namespace JSONParser
+namespace JsonParser
 {
     public class Number : BaseObject
     {

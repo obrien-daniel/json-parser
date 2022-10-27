@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// String class used to handle JSON unformatted string values.
 /// </summary>
-namespace JSONParser
+namespace JsonParser
 {
     public class String : BaseObject
     {

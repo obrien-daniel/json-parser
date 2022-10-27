@@ -4,7 +4,7 @@ using System.Linq;
 /// <summary>
 /// Array class used to handle JSON array values.
 /// </summary>
-namespace JSONParser
+namespace JsonParser
 {
     public class Array : BaseObject
     {

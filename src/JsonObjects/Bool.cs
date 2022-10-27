@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Bool class used to handle TRUE and FALSE JSON values.
 /// </summary>
-namespace JSONParser
+namespace JsonParser
 {
     public class Bool : BaseObject
     {

@@ -2,7 +2,7 @@
 /// Base class used for JSON Values
 /// </summary>
 
-namespace JSONParser
+namespace JsonParser
 {
     public abstract class BaseObject
     {
