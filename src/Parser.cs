@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
-namespace JSONParser
+namespace JsonParser
 {
     public static class Parser
     {
@@ -11,7 +10,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static BaseObject Parse(string value, ref int index)
+        public static BaseObject? Parse(string value, ref int index)
         {
             char currentValue = value[index];
             SkipWhitespace(value, ref index);
@@ -64,7 +63,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private static BaseObject ParseNumber(string value, ref int index)
+        private static BaseObject? ParseNumber(string value, ref int index)
         {
             SkipWhitespace(value, ref index);
             int end = GetNextNonNumberIndex(value, index);
@@ -293,7 +292,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private static BaseObject ParseObject(string value, ref int index)
+        private static BaseObject? ParseObject(string value, ref int index)
         {
             SkipWhitespace(value, ref index);
             index++; // skip {
@@ -312,10 +311,10 @@ namespace JSONParser
                 SkipWhitespace(value, ref index);
                 index++; // skip :
                 SkipWhitespace(value, ref index);
-                BaseObject bobj = Parse(value, ref index); // parse value
-                if (bobj == null)
+                var baseObject = Parse(value, ref index); // parse value
+                if (baseObject == null)
                     return null;
-                obj.Value.Add(name, bobj);
+                obj.Value.Add(name, baseObject);
 
                 SkipWhitespace(value, ref index);
             }
@@ -329,7 +328,7 @@ namespace JSONParser
         /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private static BaseObject ParseArray(string value, ref int index)
+        private static BaseObject? ParseArray(string value, ref int index)
         {
             SkipWhitespace(value, ref index);
             index++; // skip [
@@ -338,7 +337,7 @@ namespace JSONParser
             while (value[index] != ']')
             {
                 SkipWhitespace(value, ref index);
-                BaseObject obj = Parse(value, ref index);
+                var obj = Parse(value, ref index);
                 if (obj == null)
                     return null;
                 array.List.Add(obj);

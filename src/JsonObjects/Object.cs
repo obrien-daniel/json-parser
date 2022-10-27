@@ -5,7 +5,7 @@ using System.Linq;
 /// Object class to handle object JSON value.
 /// </summary>
 ///
-namespace JSONParser
+namespace JsonParser
 {
     public class Object : BaseObject
     {

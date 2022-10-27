@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// NULL class used to handle JSON null values.
 /// </summary>
-namespace JSONParser
+namespace JsonParser
 {
     public class Null : BaseObject
     {
